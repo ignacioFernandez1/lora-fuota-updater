@@ -1,0 +1,69 @@
+name: "LoRa FUOTA Updater"
+description: "Update IoT devices with LoRa"
+author: "Ignacio Fernandez, Franco Lopez Paviolo"
+branding:
+  icon: 'refresh-cw'
+  color: 'blue'
+inputs:
+  LORASERVER_IP:
+    description: "IP address of the LoRa Server"
+    required: true
+  LORASERVER_URL:
+    description: "URL of the LoRa Server"
+    required: true
+  LORASERVER_MQTT_PORT:
+    description: "MQTT port of the LoRa Server"
+    required: false
+    default: 1883
+  LORASERVER_API_PORT:
+    description: "API port of the LoRa Server"
+    required: false
+    default: 8090
+  LORASERVER_API_KEY:
+    description: "API key of the LoRa Server"
+    required: true
+  LORASERVER_TENANT_ID:
+    description: "Tenant ID of the LoRa Server"
+    required: true
+  LORASERVER_DOWNLINK_DR:
+    description: "Downlink data rate of the LoRa Server"
+    required: false
+    default: 5
+  LORASERVER_DOWNLINK_FREQ:
+    description: "Downlink frequency of the LoRa Server"
+    required: false
+    default: 869525000
+  LORASERVER_APP_ID:
+    description: "Application ID of the LoRa Server"
+    required: true
+  DEVICE_EUI:
+    description: "Device EUI"
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.LORASERVER_IP }}
+    - ${{ inputs.LORASERVER_URL }}
+    - ${{ inputs.LORASERVER_MQTT_PORT }}
+    - ${{ inputs.LORASERVER_API_PORT }}
+    - ${{ inputs.LORASERVER_API_KEY }}
+    - ${{ inputs.LORASERVER_TENANT_ID }}
+    - ${{ inputs.LORASERVER_DOWNLINK_DR }}
+    - ${{ inputs.LORASERVER_DOWNLINK_FREQ }}
+    - ${{ inputs.LORASERVER_APP_ID }}
+    - ${{ inputs.DEVICE_EUI }}
+
+
+LORASERVER_IP = "127.0.0.1"
+LORASERVER_URL = 'http://localhost'
+LORASERVER_MQTT_PORT = 1883
+LORASERVER_API_PORT = 8090
+LORASERVER_API_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjaGlycHN0YWNrIiwiaXNzIjoiY2hpcnBzdGFjayIsInN1YiI6IjNkM2Y1MWYxLTg3YjYtNDkwZC04NTRkLTFjNzQyNjNkMWY1NSIsInR5cCI6ImtleSJ9.89rZAeIIMd_NaAtuH6STrizLDtbRnVjS10MpRCDmW2k'
+LORASERVER_TENANT_ID = '52f14cd4-c6f1-4fbd-8f87-4025e1d49242'
+
+LORASERVER_DOWNLINK_DR = 5
+LORASERVER_DOWNLINK_FREQ = 869525000
+LORASERVER_APP_ID = 'b43d35e7-d236-471d-ad3b-19698d294f12'
+
+DEVICE_EUI='c5c65c3303799380'
