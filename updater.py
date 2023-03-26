@@ -16,6 +16,8 @@ class UpdaterConfig(BaseSettings):
     LORASERVER_DOWNLINK_FREQ: int = 869525000
     LORASERVER_APP_ID: str
     DEVICE_EUI: str
+    GITHUB_REPOSITORY: str
+    GITHUB_TOKEN: str
 
     class Config:
         env_prefix = "INPUT_"
