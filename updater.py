@@ -26,7 +26,7 @@ class UpdaterConfig(BaseSettings):
 
 config = UpdaterConfig()
 print(config.__dict__)
-git_url = f"git+https://{config.GITHUB_TOKEN}@github.com/{config.GITHUB_REPOSITORY}"
+git_url = f"https://{config.GITHUB_TOKEN}@github.com/{config.GITHUB_REPOSITORY}"
 repo = Repo.clone_from(git_url, "src")
 print(os.listdir("."))
 print(os.listdir("src"))
