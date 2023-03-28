@@ -2,6 +2,8 @@
 """Github action entry point script."""
 
 from pydantic import BaseSettings
+from git import Repo
+import os
 
 class UpdaterConfig(BaseSettings):
     """Updater configuration parameters"""
@@ -24,3 +26,7 @@ class UpdaterConfig(BaseSettings):
 
 config = UpdaterConfig()
 print(config.__dict__)
+git_url = f"https://{config.GITHUB_TOKEN}:x-oauth-basic@github.com/{config.GITHUB_REPOSITORY}"
+repo = Repo.clone_from(git_url, "device_code")
+print(os.listdir("."))
+print(os.listdir("device_code"))
