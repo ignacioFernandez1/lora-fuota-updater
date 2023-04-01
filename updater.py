@@ -5,6 +5,15 @@ from pydantic import BaseSettings
 from git import Repo
 import os
 
+def list_files(startpath):
+    for root, dirs, files in os.walk(startpath):
+        level = root.replace(startpath, '').count(os.sep)
+        indent = ' ' * 4 * (level)
+        print('{}{}/'.format(indent, os.path.basename(root)))
+        subindent = ' ' * 4 * (level + 1)
+        for f in files:
+            print('{}{}'.format(subindent, f))
+
 class UpdaterConfig(BaseSettings):
     """Updater configuration parameters"""
 
@@ -26,7 +35,4 @@ class UpdaterConfig(BaseSettings):
 
 config = UpdaterConfig()
 print(config.__dict__)
-git_url = f"https://{config.GITHUB_TOKEN}@github.com/{config.GITHUB_REPOSITORY}"
-repo = Repo.clone_from(git_url, "src")
-print(os.listdir("."))
-print(os.listdir("src"))
+list_files('/')

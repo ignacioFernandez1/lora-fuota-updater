@@ -59,6 +59,4 @@ runs:
     - ${{ inputs.LORASERVER_DOWNLINK_FREQ }}
     - ${{ inputs.LORASERVER_APP_ID }}
     - ${{ inputs.DEVICE_EUI }}
-    - ${{ inputs.GITHUB_REPOSITORY }}
-    - ${{ inputs.GITHUB_TOKEN }}
     
