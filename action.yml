@@ -39,12 +39,6 @@ inputs:
   DEVICE_EUI:
     description: "Device EUI"
     required: true
-  GITHUB_REPOSITORY:
-    description: "Github repository"
-    required: true
-  GITHUB_TOKEN:
-    description: "Github token"
-    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
