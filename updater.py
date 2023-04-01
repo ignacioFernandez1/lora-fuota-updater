@@ -35,4 +35,4 @@ class UpdaterConfig(BaseSettings):
 
 config = UpdaterConfig()
 print(config.__dict__)
-list_files('/')
+list_files('.')
