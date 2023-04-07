@@ -6,20 +6,26 @@ from typing import List
 import os
 import shutil
 
-# PREV_VERSION_DIR = 'prev_version'
-# NEW_VERSION_DIR = 'new_version'
+PREV_VERSION_DIR = 'prev_version'
+NEW_VERSION_DIR = 'new_version'
 
-# def move_files():
-#     new_dir = PREV_VERSION_DIR
-#     os.makedirs(new_dir, exist_ok=True)  # create the new directory if it doesn't already exist
+def move_files():
+    new_dir = PREV_VERSION_DIR
+    os.makedirs(new_dir, exist_ok=True)  # create the new directory if it doesn't already exist
 
-#     for item in os.listdir('.'):
-#         print(item)
-#         if os.path.isfile(item):  # check if the item is a file
-#             shutil.move(item, os.path.join(new_dir, item))  # move the file to the new directory
-#         elif os.path.isdir(item) and item != new_dir:  # check if the item is a directory
-#             shutil.move(item, os.path.join(new_dir, item))  # move the directory to the new directory
-#     shutil.copytree(new_dir, NEW_VERSION_DIR)  
+    for item in os.listdir('.'):
+        print(item)
+        if os.path.isfile(item):  # check if the item is a file
+            shutil.move(item, os.path.join(new_dir, item))  # move the file to the new directory
+        elif os.path.isdir(item) and item != new_dir:  # check if the item is a directory
+            shutil.move(item, os.path.join(new_dir, item))  # move the directory to the new directory
+    shutil.copytree(new_dir, NEW_VERSION_DIR)  
+    # git reset --hard HEAD~1 in PREV_VERSION_DIR
+    os.chdir(PREV_VERSION_DIR)
+    os.system('git reset --hard HEAD~1')
+    print(os.listdir('.'))
+    os.chdir(PREV_VERSION_DIR)
+    print(os.listdir('.'))
 
 class UpdaterConfig(BaseSettings):
     """Updater configuration parameters"""
@@ -40,6 +46,6 @@ class UpdaterConfig(BaseSettings):
 
 config = UpdaterConfig()
 print(config.__dict__)
-# move_files()
+move_files()
 
 
