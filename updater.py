@@ -2,6 +2,7 @@
 """Github action entry point script."""
 
 from pydantic import BaseSettings, validator
+from typing import List
 import os
 import shutil
 
@@ -32,14 +33,10 @@ class UpdaterConfig(BaseSettings):
     LORASERVER_DOWNLINK_DR: int = 5
     LORASERVER_DOWNLINK_FREQ: int = 869525000
     LORASERVER_APP_ID: str
-    DEVICE_EUIS: list
+    DEVICE_EUIS: List[str]
 
     class Config:
         env_prefix = "INPUT_"
-
-    @validator('DEVICE_EUIS', pre=True)
-    def validate(cls, val):
-        return val.replace('[', '').replace(']', '').replace(' ', '').split(',')
 
 config = UpdaterConfig()
 print(config.__dict__)
