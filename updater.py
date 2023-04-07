@@ -32,14 +32,14 @@ class UpdaterConfig(BaseSettings):
     LORASERVER_DOWNLINK_DR: int = 5
     LORASERVER_DOWNLINK_FREQ: int = 869525000
     LORASERVER_APP_ID: str
-    DEVICE_EUIS: str
+    DEVICE_EUIS: list
 
     class Config:
         env_prefix = "INPUT_"
 
     @validator('DEVICE_EUIS', pre=True)
     def validate(cls, val):
-        return val.split(',').replace('[', '').replace(']', '').replace(' ', '')
+        return val.replace('[', '').replace(']', '').replace(' ', '').split(',')
 
 config = UpdaterConfig()
 print(config.__dict__)
