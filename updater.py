@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Github action entry point script."""
 
-from pydantic import BaseSettings
+from pydantic import BaseSettings, validator
 import os
 import shutil
 
@@ -36,6 +36,10 @@ class UpdaterConfig(BaseSettings):
 
     class Config:
         env_prefix = "INPUT_"
+
+    @validator('DEVICE_EUIS', pre=True)
+    def validate(cls, val):
+        return val.split(',').replace('[', '').replace(']', '').replace(' ', '')
 
 config = UpdaterConfig()
 print(config.__dict__)

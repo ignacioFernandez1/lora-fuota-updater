@@ -39,7 +39,6 @@ inputs:
   DEVICE_EUIS:
     description: "Device EUIs"
     required: true
-    type: list
 runs:
   using: 'docker'
   image: 'Dockerfile'
