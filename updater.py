@@ -2,17 +2,23 @@
 """Github action entry point script."""
 
 from pydantic import BaseSettings
-from git import Repo
 import os
+import shutil
 
-def list_files(startpath):
-    for root, dirs, files in os.walk(startpath):
-        level = root.replace(startpath, '').count(os.sep)
-        indent = ' ' * 4 * (level)
-        print('{}{}/'.format(indent, os.path.basename(root)))
-        subindent = ' ' * 4 * (level + 1)
-        for f in files:
-            print('{}{}'.format(subindent, f))
+# PREV_VERSION_DIR = 'prev_version'
+# NEW_VERSION_DIR = 'new_version'
+
+# def move_files():
+#     new_dir = PREV_VERSION_DIR
+#     os.makedirs(new_dir, exist_ok=True)  # create the new directory if it doesn't already exist
+
+#     for item in os.listdir('.'):
+#         print(item)
+#         if os.path.isfile(item):  # check if the item is a file
+#             shutil.move(item, os.path.join(new_dir, item))  # move the file to the new directory
+#         elif os.path.isdir(item) and item != new_dir:  # check if the item is a directory
+#             shutil.move(item, os.path.join(new_dir, item))  # move the directory to the new directory
+#     shutil.copytree(new_dir, NEW_VERSION_DIR)  
 
 class UpdaterConfig(BaseSettings):
     """Updater configuration parameters"""
@@ -26,13 +32,13 @@ class UpdaterConfig(BaseSettings):
     LORASERVER_DOWNLINK_DR: int = 5
     LORASERVER_DOWNLINK_FREQ: int = 869525000
     LORASERVER_APP_ID: str
-    DEVICE_EUI: str
-    GITHUB_REPOSITORY: str
-    GITHUB_TOKEN: str
+    DEVICE_EUIS: str
 
     class Config:
         env_prefix = "INPUT_"
 
 config = UpdaterConfig()
 print(config.__dict__)
-list_files('.')
+# move_files()
+
+

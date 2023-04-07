@@ -36,8 +36,8 @@ inputs:
   LORASERVER_APP_ID:
     description: "Application ID of the LoRa Server"
     required: true
-  DEVICE_EUI:
-    description: "Device EUI"
+  DEVICE_EUIS:
+    description: "Device EUIs"
     required: true
 runs:
   using: 'docker'
@@ -52,5 +52,4 @@ runs:
     - ${{ inputs.LORASERVER_DOWNLINK_DR }}
     - ${{ inputs.LORASERVER_DOWNLINK_FREQ }}
     - ${{ inputs.LORASERVER_APP_ID }}
-    - ${{ inputs.DEVICE_EUI }}
-    
+    - ${{ inputs.DEVICE_EUIS }}
