@@ -8,6 +8,16 @@ import shutil
 
 PREV_VERSION_DIR = 'prev_version'
 NEW_VERSION_DIR = 'new_version'
+FIRMWARE_DIR = 'firmware'
+
+def list_files(startpath):
+    for root, dirs, files in os.walk(startpath):
+        level = root.replace(startpath, '').count(os.sep)
+        indent = ' ' * 4 * (level)
+        print('{}{}/'.format(indent, os.path.basename(root)))
+        subindent = ' ' * 4 * (level + 1)
+        for f in files:
+            print('{}{}'.format(subindent, f))
 
 def move_files():
     new_dir = PREV_VERSION_DIR
@@ -20,14 +30,20 @@ def move_files():
         elif os.path.isdir(item) and item != new_dir:  # check if the item is a directory
             shutil.move(item, os.path.join(new_dir, item))  # move the directory to the new directory
     shutil.copytree(new_dir, NEW_VERSION_DIR)  
-    # git reset --hard HEAD~1 in PREV_VERSION_DIR
+
     os.chdir(PREV_VERSION_DIR)
     os.system('git reset --hard HEAD~1')
-    os.system('mv ./src/* . && rm -rf src')
+    os.chdir('./src')
+    main = __import__('main')
+    dev_version = main.DEVICE_VERSION
+    os.system(f'mv ./src/* ../../{FIRMWARE_DIR}/{dev_version} && rm -rf src')
     print('PREV', os.listdir('.'))
     os.chdir('../' + NEW_VERSION_DIR)
-    os.system('mv ./src/* . && rm -rf src')
-    print('NEW', os.listdir('.'))
+    os.chdir('./src')
+    main = __import__('main')
+    dev_version = main.DEVICE_VERSION
+    os.system(f'mv ./src/* ../../{FIRMWARE_DIR}/{dev_version} && rm -rf src')
+    list_files('../..')
 
 class UpdaterConfig(BaseSettings):
     """Updater configuration parameters"""
