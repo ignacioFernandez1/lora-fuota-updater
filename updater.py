@@ -23,9 +23,9 @@ def move_files():
     # git reset --hard HEAD~1 in PREV_VERSION_DIR
     os.chdir(PREV_VERSION_DIR)
     os.system('git reset --hard HEAD~1')
-    print(os.listdir('.'))
-    os.chdir(PREV_VERSION_DIR)
-    print(os.listdir('.'))
+    print('PREV', os.listdir('.'))
+    os.chdir('../' + NEW_VERSION_DIR)
+    print('NEW', os.listdir('.'))
 
 class UpdaterConfig(BaseSettings):
     """Updater configuration parameters"""
