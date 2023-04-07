@@ -39,7 +39,7 @@ inputs:
   DEVICE_EUIS:
     description: "Device EUIs"
     required: true
-    type: comma-delimited-list
+    type: list
 runs:
   using: 'docker'
   image: 'Dockerfile'
