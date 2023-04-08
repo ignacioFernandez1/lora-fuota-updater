@@ -9,6 +9,11 @@ import shutil
 PREV_VERSION_DIR = 'prev_version'
 NEW_VERSION_DIR = 'new_version'
 FIRMWARE_DIR = 'firmware'
+VERSION_FILE = 'version.py'
+
+def get_version():
+    with open(VERSION_FILE) as f:
+        return f.read()
 
 def list_files(startpath):
     for root, dirs, files in os.walk(startpath):
@@ -31,19 +36,19 @@ def move_files():
             shutil.move(item, os.path.join(new_dir, item))  # move the directory to the new directory
     shutil.copytree(new_dir, NEW_VERSION_DIR)  
 
+    os.makedirs(FIRMWARE_DIR, exist_ok=True)
     os.chdir(PREV_VERSION_DIR)
+    # import ipdb; ipdb.set_trace()
     os.system('git reset --hard HEAD~1')
     os.chdir('./src')
-    main = __import__('main')
-    dev_version = main.DEVICE_VERSION
-    os.system(f'mv ./src/* ../../{FIRMWARE_DIR}/{dev_version} && rm -rf src')
-    print('PREV', os.listdir('.'))
+    dev_version = get_version()
+    os.chdir('..')
+    os.system(f'mkdir ../{FIRMWARE_DIR}/{dev_version} && mv ./src/* ../{FIRMWARE_DIR}/{dev_version} && rm -rf src')
     os.chdir('../' + NEW_VERSION_DIR)
     os.chdir('./src')
-    main = __import__('main')
-    dev_version = main.DEVICE_VERSION
-    os.system(f'mv ./src/* ../../{FIRMWARE_DIR}/{dev_version} && rm -rf src')
-    list_files('../..')
+    dev_version = get_version()
+    os.chdir('..')
+    os.system(f'mkdir ../{FIRMWARE_DIR}/{dev_version} && mv ./src/* ../{FIRMWARE_DIR}/{dev_version} && rm -rf src')
 
 class UpdaterConfig(BaseSettings):
     """Updater configuration parameters"""
