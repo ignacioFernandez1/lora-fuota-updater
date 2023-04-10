@@ -4,7 +4,7 @@ import shutil
 PREV_VERSION_DIR = 'prev_version'
 NEW_VERSION_DIR = 'new_version'
 FIRMWARE_DIR = 'firmware'
-VERSION_FILE = 'version.txt'
+VERSION_FILE = 'version.py'
 
 def get_version():
     with open(VERSION_FILE) as f:
