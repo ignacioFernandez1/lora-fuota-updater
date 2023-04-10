@@ -13,7 +13,7 @@ class UpdaterConfig(BaseSettings):
     LORASERVER_DOWNLINK_DR: int = 5
     LORASERVER_DOWNLINK_FREQ: int = 869525000
     LORASERVER_APP_ID: str
-    DEVICE_EUIS: List[str]
+    DEVICE_EUI: List[str]
 
     class Config:
         env_prefix = "INPUT_"
