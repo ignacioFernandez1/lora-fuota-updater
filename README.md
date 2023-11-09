@@ -12,7 +12,7 @@ Update IoT devices with LoRa
 * `LORASERVER_DOWNLINK_DR` - Downlink data rate of the LoRa Server. Default: `5`
 * `LORASERVER_DOWNLINK_FREQ` -"Downlink frequency of the LoRa Server. Default: `869525000`
 * `LORASERVER_APP_ID` - Application ID of the LoRa Server.
-* `DEVICE_EUIS` - Application ID of the LoRa Server.
+* `DEVICE_EUI` - Application ID of the LoRa Server.
 
 ### Example usage
 ```yaml
@@ -40,5 +40,5 @@ jobs:
           LORASERVER_DOWNLINK_DR: 5
           LORASERVER_DOWNLINK_FREQ: 869525000
           LORASERVER_APP_ID: a0642b7c1784286f
-          DEVICE_EUIS: '["a0642b7c1784286f","c1712f9a3612430f"]'
+          DEVICE_EUI: '["a0642b7c1784286f","c1712f9a3612430f"]'
 ```
