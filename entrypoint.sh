@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python -u updater.py
+python -u /updater.py
