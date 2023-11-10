@@ -33,6 +33,7 @@ def move_files():
 
     os.makedirs(FIRMWARE_DIR, exist_ok=True)
     os.chdir(PREV_VERSION_DIR)
+    os.system('git fetch origin')
     os.system('git reset --hard HEAD~1')
     os.chdir('./src')
     dev_version = get_version()
