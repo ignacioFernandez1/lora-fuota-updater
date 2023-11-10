@@ -29,6 +29,7 @@ import json
 import time
 import os
 import zlib
+import logging
 
 class updateHandler:
     
@@ -60,20 +61,20 @@ class updateHandler:
         
             self.ota.delete_multicast_group()
         except Exception as e:
-            print("error in updateHandler start method: {}".format(e))
+            logging.info("error in updateHandler start method: {}".format(e))
             self.ota.failed_update()
         
     def print_file_operations(self, oper_dict):
         if 'delete_txt' in oper_dict:
-            print('Delete text: {}'.format(oper_dict['delete_txt']))
+            logging.info('Delete text: {}'.format(oper_dict['delete_txt']))
         if 'delete_bin' in oper_dict:
-            print('Delete bin: {}'.format(oper_dict['delete_bin']))
+            logging.info('Delete bin: {}'.format(oper_dict['delete_bin']))
         if 'new_txt' in oper_dict:
-            print('New text: {}'.format(oper_dict['new_txt']))
+            logging.info('New text: {}'.format(oper_dict['new_txt']))
         if 'new_bin' in oper_dict:
-            print('New binary: {}'.format(oper_dict['new_bin']))
+            logging.info('New binary: {}'.format(oper_dict['new_bin']))
         if 'update_txt' in oper_dict:
-            print('Update {}'.format(oper_dict['update_txt']))
+            logging.info('Update {}'.format(oper_dict['update_txt']))
             
     def _create_manifest(self, oper_dict):
         manifest = {"delete":0, "update":0, "new":0}
@@ -221,8 +222,8 @@ class updateHandler:
             patch_lst = dmp.patch_make(left_text, right_text)
             patch_str = dmp.patch_toText(patch_lst)
 
-            print("File name: {}".format(f))
-            print("Patch : {}".format(patch_str))
+            logging.info("File name: {}".format(f))
+            logging.info("Patch : {}".format(patch_str))
 
             idx = f.find('/flash') + 1
             hash = self._create_hash(patch_str)
@@ -264,7 +265,7 @@ class updateHandler:
     
     def _send_manifest_msg(self):
         manifest = self._create_manifest(self.oper_dict)
-        print('Manifest: {}'.format(manifest))
+        logging.info('Manifest: {}'.format(manifest))
         
         for i in range(3):
             self._send_multicast_msg(self.ota.MANIFEST_MSG, manifest)

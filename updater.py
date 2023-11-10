@@ -8,6 +8,7 @@ import threading
 from utils.ota import OTAHandler
 from utils.config import UpdaterConfig
 from utils.files import move_files
+import logging
 
 exit = False
 client = None
@@ -15,11 +16,11 @@ config = UpdaterConfig()
 
 
 def sigint_handler(signum, frame):
-    print("Terminating Lora OTA updater")
+    logging.info("Terminating Lora OTA updater")
     os._exit(0)
     
 def exit_handler():
-    print("Terminating Lora OTA updater")
+    logging.info("Terminating Lora OTA updater")
 
 atexit.register(exit_handler)
 
@@ -30,7 +31,7 @@ def on_connect(client, userdata, flags, rc):
     if rc==0:
         client.subscribe("application/+/device/+/event/up", 0)
     else:
-        print("Bad connection Returned code=",rc) 
+        logging.info("Bad connection Returned code=",rc) 
 
 def start_lora_ota_updater():
     ota = OTAHandler()
@@ -46,12 +47,12 @@ def start_lora_ota_updater():
     ota_thread = threading.Thread(target=ota.start)
     ota_thread.start()
     
-    print("Lora OTA updater started")
+    logging.info("Lora OTA updater started")
     while client.loop() == 0:
         if ota.exit == True:
             break
         elif ota.failed_exit == True:
-            print("Device update did not finish successfully")
+            logging.info("Device update did not finish successfully")
             os._exit(1)
         pass
     

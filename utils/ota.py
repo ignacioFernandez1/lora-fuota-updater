@@ -31,6 +31,7 @@ import os
 import time
 from datetime import datetime
 from .config import UpdaterConfig
+import logging
 
 config = UpdaterConfig()
 
@@ -75,7 +76,7 @@ class OTAHandler:
 
         self._devices_eui_list = config.DEVICE_EUI
         if len(self._devices_eui_list) == 0:
-            print("No devices EUI found")
+            logging.info("No devices EUI found")
             exit(1)
         self._devices_dict = dict()
         self._devices_current_version = None
@@ -99,8 +100,8 @@ class OTAHandler:
 
     def start(self):
         self._latest_version = self._check_version()
-        print(f"Latest version Available: {self._latest_version}")
-        print("sending update info to devices...")
+        logging.info(f"Latest version Available: {self._latest_version}")
+        logging.info("sending update info to devices...")
         for device_eui in self._devices_eui_list:
             with self._devices_dict_lock:
                 self._devices_dict[device_eui] = {
@@ -133,17 +134,17 @@ class OTAHandler:
 
     def _init_update_params(self):
         try:
-            print("Creating multicast group...")
+            logging.info("Creating multicast group...")
             group_name = self._devices_current_version.strip() + '-' + self._latest_version.strip()
             # (multicast_id, mcAddr, mcNwkSKey, mcAppSKey)
             self._multicast_keys = self._clientApp.create_multicast_group(self._downlink_datarate, self._downlink_freq, group_name,
                                                                         self._loraserver_api_key, self._loraserver_app_id)
             for device_eui in self._devices_eui_list:
-                print(f"Adding device {device_eui} to multicast group...")
+                logging.info(f"Adding device {device_eui} to multicast group...")
                 self._clientApp.add_device_multicast_group(device_eui, self._multicast_keys[0], self._loraserver_api_key)
-                print(f"Device {device_eui} added to multicast group successfully!")
+                logging.info(f"Device {device_eui} added to multicast group successfully!")
         except Exception as e:
-            print(f"Error creating update parameters: {e}")
+            logging.info(f"Error creating update parameters: {e}")
             self.failed_update()
 
     def _check_version(self):
@@ -164,10 +165,10 @@ class OTAHandler:
 
     def delete_multicast_group(self):
         try:
-            print("deleting multicast group...")
+            logging.info("deleting multicast group...")
             self._clientApp.delete_multicast_group(self._multicast_keys[0], self._loraserver_api_key)
         except Exception as e:
-            print(f"Error deleting multicast group: {e}")
+            logging.info(f"Error deleting multicast group: {e}")
             self.failed_update()
 
 
@@ -211,7 +212,7 @@ class OTAHandler:
         try:
             msg_type = int(msg.split(",")[1])
         except Exception as ex:
-            print("Exception getting message type")
+            logging.info("Exception getting message type")
 
         return msg_type
 
@@ -221,7 +222,7 @@ class OTAHandler:
             rx_pkt = json.loads(payload)
             dev_msg = base64.b64decode(rx_pkt["data"])
         except Exception as ex:
-            print("Exception decoding device message")
+            logging.info("Exception decoding device message")
         return dev_msg
     
     def get_device_eui(self, payload):
@@ -229,7 +230,7 @@ class OTAHandler:
         try:
             dev_eui = json.loads(payload)["deviceInfo"]["devEui"]
         except Exception as ex:
-            print("Exception extracting device eui")
+            logging.info("Exception extracting device eui")
 
         return dev_eui
 
@@ -241,11 +242,11 @@ class OTAHandler:
         with self._devices_dict_lock:
             self._devices_dict[dev_eui]['version'] = token_msg[2]
             self._devices_dict[dev_eui]['update_info_reply'] = True
-        print(f"Device {dev_eui} version: {token_msg[2]}")
+        logging.info(f"Device {dev_eui} version: {token_msg[2]}")
 
         # if device version is the same as latest version then no update and communications end
         if LooseVersion(token_msg[2]) == LooseVersion(self._latest_version):
-            print(f"Device {dev_eui} is up to date to latest version.")
+            logging.info(f"Device {dev_eui} is up to date to latest version.")
             with self._devices_list_lock:
                 self._devices_eui_list.remove(dev_eui)
             with self._devices_dict_lock:
@@ -262,7 +263,7 @@ class OTAHandler:
         # check if all devices to update have the same version
         devices_versions = {device: self._devices_dict.get(device, {}).get('version') for device in self._devices_dict}
         if len(set(devices_versions.values())) > 1:
-            print(f"Devices have different versions: {devices_versions}")
+            logging.info(f"Devices have different versions: {devices_versions}")
             self.failed_update()
             return
             
@@ -286,20 +287,20 @@ class OTAHandler:
                 return
         
         if len(self._devices_failed_update) == 0:
-            print(f"Devices updated succesfully to latest version: {self._latest_version}")
+            logging.info(f"Devices updated succesfully to latest version: {self._latest_version}")
             self.stop()
             return
         elif len(self._devices_failed_update) == len(self._devices_eui_list):
-            print(f"All devices failed to update to latest version: {self._latest_version}")
+            logging.info(f"All devices failed to update to latest version: {self._latest_version}")
             self.failed_update()
             return
         else:
-            print(f"The following devices failed to update to latest version: {self._devices_failed_update}")
+            logging.info(f"The following devices failed to update to latest version: {self._devices_failed_update}")
             self.failed_update()
             return               
 
     def update_process(self):
-        print("Devices are ready, starting update process...")
+        logging.info("Devices are ready, starting update process...")
         update_handler = updateHandler(self._devices_current_version, self._latest_version, self._clientApp, self._loraserver_api_key, self._multicast_keys[0], self)
         update_handler.start()
         self.update_finished = True
@@ -307,7 +308,7 @@ class OTAHandler:
         
     def _start_multicast_group(self):
         self._init_update_params()
-        print("Sending multicast keys to devices...")
+        logging.info("Sending multicast keys to devices...")
         self.watchdog_reset = False
         for dev_eui in self._devices_eui_list:
             self._send_multicast_keys(dev_eui)
@@ -326,7 +327,7 @@ class OTAHandler:
                     start_time = time.time()
                 time.sleep(0.5)
             else:
-                print("Watchdog timer expired")
+                logging.info("Watchdog timer expired")
                 # If the loop finishes without the watchdog being reset, raise an exception
                 self.failed_exit = True
                 exit()
@@ -347,7 +348,7 @@ class OTAHandler:
             elif msg_type == self.LISTENING_MSG:
                 with self._devices_dict_lock:
                     self._devices_dict[dev_eui]['listening'] = True
-                print(f"device {dev_eui} is listening")
+                logging.info(f"device {dev_eui} is listening")
                 for device in self._devices_dict:
                     with self._devices_dict_lock:
                         if self._devices_dict[device]['listening'] == False:
