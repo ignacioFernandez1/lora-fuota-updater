@@ -27,7 +27,7 @@ import base64
 import os
 import json
 from .config import UpdaterConfig
-import logging
+
 
 config = UpdaterConfig()
 
@@ -104,7 +104,7 @@ class LoraServerClient:
                 else:
                     return None
         except Exception as ex:
-            logging.info("Error creating multicast data: {}".format(ex))
+            print("Error creating multicast data: {}".format(ex))
 
         return None
 
@@ -120,7 +120,7 @@ class LoraServerClient:
                 return f.getcode() == 200
 
         except Exception as ex:
-            logging.info("Error deleting multicast group: {}".format(ex))
+            print("Error deleting multicast group: {}".format(ex))
 
         return False
 
@@ -142,7 +142,7 @@ class LoraServerClient:
                 return f.getcode() == 200
 
         except Exception as ex:
-            logging.info("Error adding device to multicast group: {}".format(ex))
+            print("Error adding device to multicast group: {}".format(ex))
 
         return False
 
@@ -163,7 +163,7 @@ class LoraServerClient:
                 else:
                     return None
         except Exception as ex:
-            logging.info("Error getting multicast keys: {}".format(ex))
+            print("Error getting multicast keys: {}".format(ex))
 
         return None
 
@@ -188,15 +188,15 @@ class LoraServerClient:
             with urllib.request.urlopen(r) as f:
                 resp = f.read().decode('utf-8')
                 if "multicastQueueItems" in resp:
-                    logging.info(resp)
+                    print(resp)
                     json_resp = json.loads(resp)["multicastQueueItems"]
-                    logging.info("Len: {}".format(len(json_resp)))
+                    print("Len: {}".format(len(json_resp)))
                     return len(json_resp)
                 else:
                     return -1
 
         except Exception as ex:
-            logging.info("Error getting multicast queue length: {}".format(ex))
+            print("Error getting multicast queue length: {}".format(ex))
 
         return -1
 
@@ -217,6 +217,6 @@ class LoraServerClient:
                 return f.getcode() == 200
 
         except Exception as ex:
-            logging.info("Error sending multicast data: {}".format(ex))
+            print("Error sending multicast data: {}".format(ex))
 
         return False

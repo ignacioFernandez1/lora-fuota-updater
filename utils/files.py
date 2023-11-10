@@ -1,6 +1,6 @@
 import os
 import shutil
-import logging
+
 
 PREV_VERSION_DIR = 'prev_version'
 NEW_VERSION_DIR = 'new_version'
@@ -15,17 +15,17 @@ def list_files(startpath):
     for root, dirs, files in os.walk(startpath):
         level = root.replace(startpath, '').count(os.sep)
         indent = ' ' * 4 * (level)
-        logging.info('{}{}/'.format(indent, os.path.basename(root)))
+        print('{}{}/'.format(indent, os.path.basename(root)))
         subindent = ' ' * 4 * (level + 1)
         for f in files:
-            logging.info('{}{}'.format(subindent, f))
+            print('{}{}'.format(subindent, f))
 
 def move_files():
     new_dir = PREV_VERSION_DIR
     os.makedirs(new_dir, exist_ok=True)  # create the new directory if it doesn't already exist
 
     for item in os.listdir('.'):
-        logging.info(item)
+        print(item)
         if os.path.isfile(item):  # check if the item is a file
             shutil.move(item, os.path.join(new_dir, item))  # move the file to the new directory
         elif os.path.isdir(item) and item != new_dir:  # check if the item is a directory
